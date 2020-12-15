@@ -1,18 +1,24 @@
 import React from 'react';
 import { Grid, Card, CardActionArea, CardMedia, Typography, CardContent, CardActions, Button } from '@material-ui/core';
+import classNames from 'classnames';
+
 import useStyles from './styles';
 
 const NewsCard = (
     {
         article:
             { title, description, publishedAt, source, url, urlToImage },
-        idx
+        idx,
+        activeArticle
     }
 ) => {
     const classes = useStyles();
     return (
         <Grid item xs={12} sm={6} md={4} lg={3} style={{ display: 'flex' }}>
-            <Card className={classes.card}>
+            <Card className={classNames(classes.card,
+                activeArticle === idx ?
+                    classes.activeCard : null)}
+            >
                 <CardActionArea href={url} target="_blank" rel="noopener noreferrer">
                     <CardMedia
                         image={urlToImage || 'https://www.industry.gov.au/sites/default/files/August%202018/image/news-placeholder-738.png'}

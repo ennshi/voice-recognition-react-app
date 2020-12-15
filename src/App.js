@@ -10,12 +10,16 @@ const alanLogoSrc = 'https://alan.app/voice/images/previews/preview.jpg';
 const App = () => {
     const classes = useStyles();
     const [newsArticles, setNewsArticles] = useState([]);
+    const [activeArticle, setActiveArticle] = useState(-1);
     useEffect(() => {
         alanBtn({
             key: alanKey,
             onCommand: ({command, articles}) => {
                 if(command === 'newHeadlines') {
                     setNewsArticles(articles);
+                    setActiveArticle(-1);
+                } else if(command === 'highlight') {
+                    setActiveArticle(prevArt => prevArt + 1);
                 }
             }
         })
@@ -26,7 +30,7 @@ const App = () => {
                 <img src={alanLogoSrc} alt="Alan AI logo" className={classes.alanLogo} />
             </header>
             { newsArticles.length ?
-                <NewsCards articles={newsArticles}/> :
+                <NewsCards articles={newsArticles} activeArticle={activeArticle}/> :
                 <InfoCards/>
             }
         </main>

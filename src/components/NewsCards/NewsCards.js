@@ -1,15 +1,16 @@
 import React from 'react';
 import NewsCard from '../NewsCard/NewsCard';
-import {Grid, Grow, Typography} from '@material-ui/core';
+import {Grid, Grow} from '@material-ui/core';
 import useStyles from './styles';
 
-const NewsCards = ({ articles }) => {
+const NewsCards = ({ articles, activeArticle }) => {
     const classes = useStyles();
     const articleCards = articles.map((article, i) => (
             <NewsCard
                 key={i}
                 idx={i}
                 article={article}
+                activeArticle={activeArticle}
             />
     ));
     return (
