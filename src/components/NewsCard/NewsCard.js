@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {createRef, useEffect, useState} from 'react';
 import { Grid, Card, CardActionArea, CardMedia, Typography, CardContent, CardActions, Button } from '@material-ui/core';
 import classNames from 'classnames';
 
@@ -13,13 +13,23 @@ const NewsCard = (
     }
 ) => {
     const classes = useStyles();
+    const [elRefs, setElRefs] = useState([]);
+    const scrollToRef = (ref) => window.scroll(0, ref.current.offsetTop - 50);
+    useEffect(() => {
+        setElRefs(refs => Array(20).fill(-1).map((_, i) => (refs[i] || createRef())));
+    }, []);
+    useEffect(() => {
+        if(idx === activeArticle && elRefs[activeArticle]) {
+            scrollToRef(elRefs[activeArticle]);
+        }
+    }, [idx, activeArticle, elRefs]);
     return (
-        <Grid item xs={12} sm={6} md={4} lg={3} style={{ display: 'flex' }}>
+        <Grid ref={elRefs[idx]} item xs={12} sm={6} md={4} lg={3} style={{ display: 'flex' }}>
             <Card className={classNames(classes.card,
                 activeArticle === idx ?
                     classes.activeCard : null)}
             >
-                <CardActionArea href={url} target="_blank" rel="noopener noreferrer">
+                <CardActionArea href={url} target="_blank" rel="noreferrer">
                     <CardMedia
                         image={urlToImage || 'https://www.industry.gov.au/sites/default/files/August%202018/image/news-placeholder-738.png'}
                         className={classes.media}

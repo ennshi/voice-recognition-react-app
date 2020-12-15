@@ -3,6 +3,7 @@ import alanBtn from '@alan-ai/alan-sdk-web';
 import NewsCards from './components/NewsCards/NewsCards';
 import InfoCards from './components/InfoCards/InfoCards';
 import useStyles from './styles';
+import wordsToNumbers from 'words-to-numbers';
 
 const alanKey = '5c4f962aef9977f3f5367d66e9e73fee2e956eca572e1d8b807a3e2338fdd0dc/stage';
 const alanLogoSrc = 'https://alan.app/voice/images/previews/preview.jpg';
@@ -14,12 +15,22 @@ const App = () => {
     useEffect(() => {
         alanBtn({
             key: alanKey,
-            onCommand: ({command, articles}) => {
+            onCommand: ({command, articles, number}) => {
                 if(command === 'newHeadlines') {
                     setNewsArticles(articles);
                     setActiveArticle(-1);
                 } else if(command === 'highlight') {
                     setActiveArticle(prevArt => prevArt + 1);
+                } else if(command === 'open') {
+                    const parsedNum = number.length > 2 ? wordsToNumbers(number, {fuzzy: true}) : number;
+                    if(parsedNum > 20) {
+                        return alanBtn().playText('Please try again.');
+                    }
+                    const article = articles[parsedNum-1];
+                    if(article) {
+                        window.open(article.url, '_blank');
+                        alanBtn().playText('Opening...');
+                    }
                 }
             }
         })
